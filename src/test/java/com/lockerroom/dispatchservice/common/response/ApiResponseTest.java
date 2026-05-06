@@ -7,11 +7,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ApiResponseTest {
 
     @Test
-    void success_withData_returnsOkCodeAndData() {
+    void success_withData_returnsSuccessCodeAndData() {
         ApiResponse<String> response = ApiResponse.success("hello");
 
-        assertThat(response.code()).isEqualTo("OK");
-        assertThat(response.message()).isEqualTo("success");
+        assertThat(response.code()).isEqualTo("SUCCESS");
+        assertThat(response.message()).isEqualTo("성공");
         assertThat(response.data()).isEqualTo("hello");
     }
 
@@ -19,7 +19,7 @@ class ApiResponseTest {
     void success_withoutData_returnsNullData() {
         ApiResponse<Void> response = ApiResponse.success();
 
-        assertThat(response.code()).isEqualTo("OK");
+        assertThat(response.code()).isEqualTo("SUCCESS");
         assertThat(response.data()).isNull();
     }
 

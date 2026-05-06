@@ -73,7 +73,7 @@ class ResourceServiceClientTest {
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody("""
-                                {"code":"OK","message":"success","data":{"id":777}}
+                                {"code":"SUCCESS","message":"성공","data":{"id":777}}
                                 """)));
 
         CreatedIdResponse response = client.createComment(
@@ -92,7 +92,7 @@ class ResourceServiceClientTest {
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody("""
-                                {"code":"OK","message":"success","data":{"id":555}}
+                                {"code":"SUCCESS","message":"성공","data":{"id":555}}
                                 """)));
 
         CreatedIdResponse response = client.createPost(
@@ -108,7 +108,7 @@ class ResourceServiceClientTest {
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody("""
-                                {"code":"OK","message":"success","data":{
+                                {"code":"SUCCESS","message":"성공","data":{
                                   "userId":9,"email":"a@b.c","phone":"01012345678",
                                   "preferredChannels":["MAIL","SMS"],"notificationOptIn":true
                                 }}
@@ -133,7 +133,7 @@ class ResourceServiceClientTest {
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody("""
-                                {"code":"OK","message":"success","data":{"id":1}}
+                                {"code":"SUCCESS","message":"성공","data":{"id":1}}
                                 """)));
 
         CreatedIdResponse response = client.createComment(

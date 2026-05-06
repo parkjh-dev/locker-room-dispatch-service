@@ -9,8 +9,8 @@ public record ApiResponse<T>(
         T data
 ) {
 
-    private static final String SUCCESS_CODE = "OK";
-    private static final String SUCCESS_MESSAGE = "success";
+    private static final String SUCCESS_CODE = "SUCCESS";
+    private static final String SUCCESS_MESSAGE = "성공";
 
     public static <T> ApiResponse<T> success(T data) {
         return new ApiResponse<>(SUCCESS_CODE, SUCCESS_MESSAGE, data);
