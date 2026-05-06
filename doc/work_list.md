@@ -61,7 +61,7 @@ resource-service ─── notification.comment ───┐
 | `ai.qna-answer.ready` | ai-service | `postId` | `{ eventId, postId, content, model, generatedAt }` | resource-service `POST /posts/{postId}/comments` (`isAiGenerated=true`) |
 | `ai.team-news.ready` | ai-service | `teamId` | `{ eventId, teamId, sport, boardId, title, content, generatedAt }` | resource-service `POST /posts` (`isAiGenerated=true`) |
 | `notification.comment` | resource-service | `userId` | `{ eventId, userId, postId, commentId, actorNickname }` | Mail / SMS 발송 |
-| `notification.reply` | resource-service | `userId` | `{ eventId, userId, parentCommentId, replyId, actorNickname }` | Mail / SMS 발송 |
+| `notification.reply` | resource-service | `userId` | `{ eventId, userId, postId, parentCommentId, replyId, actorNickname }` | Mail / SMS 발송 |
 | `notification.inquiry-replied` | resource-service | `userId` | `{ eventId, userId, inquiryId, replyId }` | Mail / SMS 발송 |
 | `notification.report-processed` | resource-service | `userId` | `{ eventId, userId, reportId, decision }` | Mail / SMS 발송 |
 
@@ -475,3 +475,4 @@ open target/site/jacoco/index.html
 | 1.5 | 2026-05-06 | **Phase 4 완료**. 알림 Consumer (Mail 우선) + Strategy 채널 라우팅. `Recipient` 도메인 + `RecipientResolver`(Caffeine 캐시) + `MessageTemplate` Entity + `TemplateRenderer` + `DispatchChannelStrategy` IF + `MailChannel` + `NotificationDispatchService` + 4종 이벤트 DTO + 4종 Consumer + V2 시드 마이그레이션. 77 tests passed (+27). 결정사항: 부분 실패 정책(전체 실패 시에만 throw), OPT_OUT/RECIPIENT_NOT_FOUND는 channel=NONE 단일 SKIPPED 로그, MessageTemplateRepository IT는 Phase 6으로 미룸 |
 | 1.6 | 2026-05-06 | **Phase 5 완료**. 가비아 SMS 구현 + `SmsChannel`. `GabiaSmsProperties`(record) + `GabiaSmsConfig`(Basic Auth RestClient) + `GabiaSendRequest`/`GabiaSendResponse`(JsonAlias 호환) + `GabiaSmsSender`(UTF-8 byte 기준 SMS/LMS 자동 분기) + `SmsChannel`(MailChannel과 동일 패턴). 98 tests passed (+21). 결정사항: 90byte UTF-8 기본 임계치(properties로 조정), 예외 안 던지고 `SmsResult.failure` 반환, JSON 응답 키 별칭 매핑(`result`/`code`/`ref_key` 등). 잔액 모니터링은 Phase 6으로, 실 발송은 사용자가 키 발급 후 5.19에서 |
 | 1.7 | 2026-05-06 | **Phase 6 1차 완료** (PII 마스킹 + Metrics + Cleanup Job). `PiiMasker`(common 유틸 + 기존 inline 마스킹 통합), `DispatchMetrics`(Micrometer counter `dispatch.events.total` / `dispatch.dlq.total` + 태그 `event_type`/`channel`/`status`/`topic`), 모든 PublishService/NotificationDispatchService/Consumer DLT 핸들러에서 메트릭 기록. `DispatchLogCleanupJob`(매일 03:00, ShedLock, 90일 보존). 111 tests passed (+13). 결정사항: HealthIndicator/DLQ Replay/외부 통합 테스트는 Phase 7 분리(범위·시간·인프라 부담) |
+| 1.8 | 2026-05-06 | Sprint 1 정합성 보정 — `notification.reply` 페이로드 표에 `postId` 명시 (resource-service 측 신규 record `comment/event/ReplyNotificationEvent`와 합치). 4종 record + eventId UUID 발행은 resource-service 측에서 일괄 정렬 |
