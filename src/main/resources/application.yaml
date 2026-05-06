@@ -1,3 +1,61 @@
 spring:
   application:
     name: dispatch-service
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+  kafka:
+    consumer:
+      group-id: dispatch-service
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      isolation-level: read_committed
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        max.poll.records: 50
+        max.poll.interval.ms: 300000
+        spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+        spring.json.trusted.packages: com.lockerroom.dispatchservice.*
+        spring.json.use.type.headers: false
+        spring.json.value.default.type: java.util.Map
+    listener:
+      ack-mode: manual_immediate
+      concurrency: 3
+      missing-topics-fatal: false
+
+server:
+  port: 8084
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,loggers
+  endpoint:
+    health:
+      show-details: when_authorized
+      probes:
+        enabled: true
+
+dispatch:
+  sms:
+    provider: ${DISPATCH_SMS_PROVIDER:stub}
+  alimtalk:
+    provider: ${DISPATCH_ALIMTALK_PROVIDER:stub}
+  resource-service:
+    base-url: ${RESOURCE_SERVICE_BASE_URL:http://localhost:8082}
+  recipient-cache:
+    expire-minutes: 10
+    max-size: 10000

@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://localhost:3306/locker_room_dispatch?createDatabaseIfNotExist=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  flyway:
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+  mail:
+    host: ${MAIL_HOST:localhost}
+    port: ${MAIL_PORT:3025}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail.smtp.auth: false
+      mail.smtp.starttls.enable: false
+  security:
+    oauth2:
+      client:
+        registration:
+          dispatch-service:
+            client-id: ${KEYCLOAK_CLIENT_ID:dispatch-service}
+            client-secret: ${KEYCLOAK_CLIENT_SECRET:dev-secret}
+            authorization-grant-type: client_credentials
+            provider: keycloak
+        provider:
+          keycloak:
+            token-uri: ${KEYCLOAK_TOKEN_URI:http://localhost:8180/realms/locker-room/protocol/openid-connect/token}
+
+dispatch:
+  sms:
+    provider: stub
+  alimtalk:
+    provider: stub
+  mail:
+    from: noreply@lockerroom.local
+
+logging:
+  level:
+    com.lockerroom.dispatchservice: DEBUG
+    org.springframework.kafka: INFO
